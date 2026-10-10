@@ -28,7 +28,11 @@
     d.classList.add("js")
     try {
       var l = localStorage.getItem("portfolio-lang")
-      if (l === "bn" || l === "en") { d.setAttribute("data-lang", l); d.lang = l }
+      if (["bn", "hi", "de", "it", "es"].indexOf(l) !== -1) {
+        d.setAttribute("data-lang", l); d.lang = l
+        d.classList.add("i18n-pending") // hide the English text until the translation is in place
+        setTimeout(function () { d.classList.remove("i18n-pending") }, 2500)
+      }
     } catch (e) {}
   })()
 </script>
@@ -37,6 +41,7 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Israt Zaman Srity",
+  "alternateName": "ইসরাত জামান স্মৃতি",
   "url": "https://israt24hub.github.io/",
   "image": "https://israt24hub.github.io/img/srity-640.jpg",
   "affiliation": { "@type": "CollegeOrUniversity", "name": "North South University" },
@@ -50,7 +55,7 @@
 </script>
 </head>
 <body>
-<a class="skip" href="#main"><span class="lang-en">Skip to content</span><span class="lang-bn">মূল অংশে যান</span></a>
+<a class="skip" href="#main"><span data-i18n="ui.1">Skip to content</span></a>
 
 <header class="nav" id="top">
   <div class="nav-inner">
@@ -59,20 +64,29 @@
       <span class="brand-name">Israt Zaman Srity</span>
     </a>
     <nav class="nav-links" id="nav-links" aria-label="Sections">
-      <a href="#about"><span class="lang-en">About</span><span class="lang-bn">পরিচিতি</span></a>
-      <a href="#projects"><span class="lang-en">Projects</span><span class="lang-bn">প্রজেক্ট</span></a>
-      <a href="#skills"><span class="lang-en">Skills</span><span class="lang-bn">দক্ষতা</span></a>
-      <a href="#experience"><span class="lang-en">Experience</span><span class="lang-bn">অভিজ্ঞতা</span></a>
-      <a href="#interests"><span class="lang-en">Interests</span><span class="lang-bn">আগ্রহ</span></a>
-      <a href="#contact"><span class="lang-en">Contact</span><span class="lang-bn">যোগাযোগ</span></a>
+      <a href="#about"><span data-i18n="nav.1">About</span></a>
+      <a href="#projects"><span data-i18n="nav.2">Projects</span></a>
+      <a href="#skills"><span data-i18n="nav.3">Skills</span></a>
+      <a href="#experience"><span data-i18n="nav.4">Experience</span></a>
+      <a href="#interests"><span data-i18n="nav.5">Interests</span></a>
+      <a href="#contact"><span data-i18n="nav.6">Contact</span></a>
       <span class="nav-indicator" aria-hidden="true"></span>
     </nav>
     <div class="nav-actions">
-      <button type="button" id="lang-toggle" class="lang-toggle">
-        <span class="lang-en" lang="bn">বাংলা</span><span class="lang-bn" lang="en">English</span>
-      </button>
+      <label class="lang-picker">
+        <span class="visually-hidden" data-i18n="ui.language">Language</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 3.9 5.8 3.9 9s-1.3 6.2-3.9 9c-2.6-2.8-3.9-5.8-3.9-9S9.4 5.8 12 3Z"/></g></svg>
+        <select id="lang-select">
+          <option value="en" lang="en">English</option>
+          <option value="bn" lang="bn">বাংলা</option>
+          <option value="hi" lang="hi">हिन्दी</option>
+          <option value="de" lang="de">Deutsch</option>
+          <option value="it" lang="it">Italiano</option>
+          <option value="es" lang="es">Español</option>
+        </select>
+      </label>
       <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav-links">
-        <span class="visually-hidden"><span class="lang-en">Menu</span><span class="lang-bn">মেনু</span></span>
+        <span class="visually-hidden"><span data-i18n="nav.7">Menu</span></span>
         <span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
       </button>
     </div>
@@ -86,28 +100,23 @@
   <div class="container hero-grid">
     <div class="hero-text">
       <p class="hero-where intro" style="--d:0">
-        <span class="lang-en">CSE undergraduate at North South University, Dhaka</span>
-        <span class="lang-bn">সিএসই শিক্ষার্থী, নর্থ সাউথ ইউনিভার্সিটি, ঢাকা</span>
+        <span data-i18n="hero.1">CSE undergraduate at North South University, Dhaka</span>
       </p>
       <h1 class="hero-name" id="hero-name">
-        <span class="lang-en"><span class="line"><span>Israt Zaman</span></span><span class="line"><span>Srity</span></span></span>
-        <span class="lang-bn"><span class="line"><span>ইসরাত জামান</span></span><span class="line"><span>শ্রীতি</span></span></span>
+        <span data-i18n="hero.2"><span class="line"><span>Israt Zaman</span></span><span class="line"><span>Srity</span></span></span>
       </h1>
       <p class="hero-alt intro" style="--d:3" aria-hidden="true">
-        <span class="lang-en" lang="bn">ইসরাত জামান শ্রীতি</span>
-        <span class="lang-bn" lang="en">Israt Zaman Srity</span>
+        <span id="hero-alt" lang="bn" data-i18n="hero.alt">ইসরাত জামান স্মৃতি</span>
       </p>
       <p class="hero-role intro" style="--d:4">
-        <span class="lang-en">Aspiring AI/ML engineer and researcher</span>
-        <span class="lang-bn">উদীয়মান এআই/এমএল ইঞ্জিনিয়ার ও গবেষক</span>
+        <span data-i18n="hero.3">Aspiring AI/ML engineer and researcher</span>
       </p>
       <p class="hero-lede intro" style="--d:5">
-        <span class="lang-en">I explore how machine learning and language models can be built, evaluated, and applied to real problems — from mental health prediction to medical information extraction. Outside the lab, I write about books at BookaholiChael.</span>
-        <span class="lang-bn">আমি এমন গবেষণা ও প্রকল্প নিয়ে কাজ করি যেখানে মেশিন লার্নিং ও ভাষা মডেল বাস্তব সমস্যা সমাধানে ব্যবহৃত হয় — মানসিক স্বাস্থ্য পূর্বাভাস থেকে চিকিৎসা তথ্য নিষ্কাশন পর্যন্ত। কাজের বাইরে আমি বইয়ের জগতে থাকি BookaholiChael-এ।</span>
+        <span data-i18n="hero.4">I explore how machine learning and language models can be built, evaluated, and applied to real problems — from mental health prediction to medical information extraction. Outside the lab, I write about books at BookaholiChael.</span>
       </p>
       <div class="cta-row intro" style="--d:6">
-        <a class="btn btn-primary" href="#projects"><span class="lang-en">View my projects</span><span class="lang-bn">প্রজেক্ট দেখুন</span></a>
-        <a class="btn btn-ghost" href="#contact"><span class="lang-en">Get in touch</span><span class="lang-bn">যোগাযোগ করুন</span></a>
+        <a class="btn btn-primary" href="#projects"><span data-i18n="hero.5">View my projects</span></a>
+        <a class="btn btn-ghost" href="#contact"><span data-i18n="hero.6">Get in touch</span></a>
         <span class="hero-social">
           <a href="https://github.com/Israt24hub" target="_blank" rel="noopener" aria-label="GitHub">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.3-1.69-1.3-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
@@ -124,12 +133,10 @@
         <svg class="arch-line" aria-hidden="true"><path /></svg>
       </div>
       <figcaption class="arch-caption">
-        <span class="lang-en">The Bangla alphabet, hung like wind chimes. Move through it.</span>
-        <span class="lang-bn">বাংলা বর্ণমালা, উইন্ড চাইমের মতো ঝুলছে। কার্সর বুলিয়ে দেখুন।</span>
+        <span data-i18n="hero.7">Curiosity, code, books, language, data and learning, hung like wind chimes. Move through them.</span>
         <button type="button" class="sound-btn" id="hero-sound" aria-pressed="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path class="wave" d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.5a8 8 0 0 1 0 11"/></g></svg>
-          <span class="lang-en" data-on="Sound on" data-off="Turn on sound">Turn on sound</span>
-          <span class="lang-bn" data-on="শব্দ চালু" data-off="শব্দ চালু করুন">শব্দ চালু করুন</span>
+          <span class="sound-label" data-i18n="sound.off">Turn on sound</span>
         </button>
       </figcaption>
     </figure>
@@ -146,18 +153,16 @@
       </picture>
     </div>
     <div class="about-main">
-      <h2 class="title" data-reveal><span class="lang-en">Where engineering meets research</span><span class="lang-bn">যেখানে ইঞ্জিনিয়ারিং ও গবেষণা মিলিত হয়</span></h2>
+      <h2 class="title" data-reveal><span data-i18n="about.1">Where engineering meets research</span></h2>
       <div class="about-text" data-reveal>
-        <p class="lang-en">I'm currently completing my BSc in Computer Science &amp; Engineering at North South University (NSU). My goal is to grow into an AI/ML engineer and researcher — combining practical engineering with careful experimentation. I'm especially interested in understanding how models work, evaluating them properly, and building systems that solve meaningful problems.</p>
-        <p class="lang-bn">আমি বর্তমানে নর্থ সাউথ ইউনিভার্সিটি (NSU)-তে কম্পিউটার সায়েন্স ও ইঞ্জিনিয়ারিং বিষয়ে বিএসসি সম্পন্ন করছি। আমার লক্ষ্য একজন এআই/এমএল ইঞ্জিনিয়ার ও গবেষক হিসেবে গড়ে ওঠা — ব্যবহারিক ইঞ্জিনিয়ারিং ও গভীর পরীক্ষণের সমন্বয়ে। মডেল কীভাবে কাজ করে তা বোঝা, সঠিকভাবে মূল্যায়ন করা এবং বাস্তব সমস্যার সমাধানকারী সিস্টেম তৈরি করা আমার বিশেষ আগ্রহের বিষয়।</p>
-        <p class="lang-en">Beyond technology, I've been active in student organizations, mentorship, event management, and public speaking. One of my personal creative projects is BookaholiChael, a Bookstagram where I share my love for books and reading.</p>
-        <p class="lang-bn">প্রযুক্তির বাইরে আমি শিক্ষার্থী সংগঠন, মেন্টরশিপ, ইভেন্ট ম্যানেজমেন্ট ও পাবলিক স্পিকিং-এ সক্রিয় থেকেছি। আমার একটি ব্যক্তিগত সৃজনশীল প্রকল্প হলো BookaholiChael — একটি Bookstagram, যেখানে আমি বই ও পড়ার প্রতি ভালোবাসা ভাগ করে নিই।</p>
+        <p data-i18n="about.2">I'm currently completing my BSc in Computer Science &amp; Engineering at North South University (NSU). My goal is to grow into an AI/ML engineer and researcher — combining practical engineering with careful experimentation. I'm especially interested in understanding how models work, evaluating them properly, and building systems that solve meaningful problems.</p>
+        <p data-i18n="about.3">Beyond technology, I've been active in student organizations, mentorship, event management, and public speaking. One of my personal creative projects is BookaholiChael, a Bookstagram where I share my love for books and reading.</p>
       </div>
       <dl class="facts" data-reveal>
-        <div><dt><span class="lang-en">Based in</span><span class="lang-bn">অবস্থান</span></dt><dd><span class="lang-en">Dhaka, Bangladesh</span><span class="lang-bn">ঢাকা, বাংলাদেশ</span></dd></div>
-        <div><dt><span class="lang-en">Studying</span><span class="lang-bn">অধ্যয়ন</span></dt><dd><span class="lang-en">BSc in CSE, North South University</span><span class="lang-bn">বিএসসি (সিএসই), নর্থ সাউথ ইউনিভার্সিটি</span></dd></div>
-        <div><dt><span class="lang-en">Focus</span><span class="lang-bn">আগ্রহের ক্ষেত্র</span></dt><dd><span class="lang-en">Machine learning, NLP, model evaluation</span><span class="lang-bn">মেশিন লার্নিং, এনএলপি, মডেল মূল্যায়ন</span></dd></div>
-        <div><dt><span class="lang-en">Languages</span><span class="lang-bn">ভাষা</span></dt><dd><span class="lang-en">Bangla, English</span><span class="lang-bn">বাংলা, ইংরেজি</span></dd></div>
+        <div><dt><span data-i18n="about.4">Based in</span></dt><dd><span data-i18n="about.5">Dhaka, Bangladesh</span></dd></div>
+        <div><dt><span data-i18n="about.6">Studying</span></dt><dd><span data-i18n="about.7">BSc in CSE, North South University</span></dd></div>
+        <div><dt><span data-i18n="about.8">Focus</span></dt><dd><span data-i18n="about.9">Machine learning, NLP, model evaluation</span></dd></div>
+        <div><dt><span data-i18n="about.10">Languages</span></dt><dd><span data-i18n="about.11">Bangla, English</span></dd></div>
       </dl>
     </div>
   </div>
@@ -166,31 +171,23 @@
 <!-- ============================== PROJECTS ============================== -->
 <section id="projects" class="section">
   <div class="container">
-    <h2 class="title" data-reveal><span class="lang-en">Selected work</span><span class="lang-bn">নির্বাচিত কাজ</span></h2>
+    <h2 class="title" data-reveal><span data-i18n="projects.1">Selected work</span></h2>
 
     <article class="feature" data-reveal>
       <div class="feature-text">
-        <h3><span class="lang-en">Bank Marketing: the column that fooled every model</span><span class="lang-bn">ব্যাংক মার্কেটিং: যে কলাম প্রতিটি মডেলকে বোকা বানাল</span></h3>
-        <p class="meta"><span class="lang-en">CSE445 group project, team of four</span><span class="lang-bn">CSE445 গ্রুপ প্রজেক্ট, চারজনের দল</span></p>
-        <p class="lang-en">Predicting which bank customers subscribe to a term deposit (UCI Bank Marketing) with four families of models: classical ML, tabular foundation models (iLTM, TabPFN v2), fine-tuned transformers (DistilBERT, RoBERTa) and LLM prompting (Phi-3-mini). Written up as an IEEE-format paper.</p>
-        <p class="lang-bn">UCI ব্যাংক মার্কেটিং ডেটাসেটে কোন গ্রাহক টার্ম ডিপোজিট নেবেন তার পূর্বাভাস — চার ধরনের মডেল দিয়ে: ক্লাসিক্যাল এমএল, ট্যাবুলার ফাউন্ডেশন মডেল (iLTM, TabPFN v2), ফাইন-টিউনড ট্রান্সফরমার (DistilBERT, RoBERTa) এবং এলএলএম প্রম্পটিং (Phi-3-mini)। আইইইই ফরম্যাটে গবেষণাপত্র আকারে লেখা।</p>
-        <ul class="findings lang-en">
+        <h3><span data-i18n="projects.2">Bank Marketing: the column that fooled every model</span></h3>
+        <p class="meta"><span data-i18n="projects.3">CSE445 group project, team of four</span></p>
+        <p data-i18n="projects.4">Predicting which bank customers subscribe to a term deposit (UCI Bank Marketing) with four families of models: classical ML, tabular foundation models (iLTM, TabPFN v2), fine-tuned transformers (DistilBERT, RoBERTa) and LLM prompting (Phi-3-mini). Written up as an IEEE-format paper.</p>
+        <ul class="findings" data-i18n="projects.5">
           <li>Keeping the call-duration column raised ROC-AUC by about <b>0.14</b> in every pipeline — more than any difference between the models.</li>
           <li>On a time-based split (train 2008–09, test 2010), ROC-AUC fell to <b>0.65</b>.</li>
           <li>TabPFN v2 reached almost the same F1 as iLTM (0.520 vs 0.527) with about <b>1/125</b> of the compute.</li>
         </ul>
-        <ul class="findings lang-bn">
-          <li>কলের সময়কাল (duration) কলাম রাখলে প্রতিটি পাইপলাইনে ROC-AUC প্রায় <b>০.১৪</b> বেড়ে যায় — যা মডেলগুলোর নিজেদের মধ্যে যেকোনো পার্থক্যের চেয়ে বেশি।</li>
-          <li>সময়ভিত্তিক স্প্লিটে (২০০৮–০৯-এ ট্রেন, ২০১০-এ টেস্ট) ROC-AUC নেমে আসে <b>০.৬৫</b>-এ।</li>
-          <li>TabPFN v2 প্রায় একই F1 (০.৫২০ বনাম ০.৫২৭) পেয়েছে iLTM-এর মাত্র <b>১/১২৫</b> ভাগ কম্পিউটে।</li>
-        </ul>
-        <p class="role lang-en"><b>My role:</b> one of the two main contributors. I built the classical ML baselines, fine-tuned DistilBERT and RoBERTa, ran the iLTM, TabPFN v2 and Phi-3-mini experiments, and wrote the paper.</p>
-        <p class="role lang-bn"><b>আমার ভূমিকা:</b> দুই প্রধান অবদানকারীর একজন — ক্লাসিক্যাল এমএল বেসলাইন, DistilBERT ও RoBERTa ফাইন-টিউনিং, iLTM, TabPFN v2 ও Phi-3-mini পরীক্ষা এবং গবেষণাপত্র লেখা।</p>
-        <p class="built lang-en">Built with scikit-learn, Hugging Face Transformers, TabPFN v2, iLTM, Phi-3-mini and LaTeX.</p>
-        <p class="built lang-bn">ব্যবহৃত: scikit-learn, Hugging Face Transformers, TabPFN v2, iLTM, Phi-3-mini ও LaTeX।</p>
+        <p class="role" data-i18n="projects.6"><b>My role:</b> one of the two main contributors. I built the classical ML baselines, fine-tuned DistilBERT and RoBERTa, ran the iLTM, TabPFN v2 and Phi-3-mini experiments, and wrote the paper.</p>
+        <p class="built" data-i18n="projects.7">Built with scikit-learn, Hugging Face Transformers, TabPFN v2, iLTM, Phi-3-mini and LaTeX.</p>
         <p class="links">
-          <a class="link" href="https://github.com/Israt24hub/bank-marketing-leakage" target="_blank" rel="noopener"><span class="lang-en">Read the write-up</span><span class="lang-bn">বিস্তারিত পড়ুন</span></a>
-          <a class="link" href="https://israt24hub.github.io/data-leakage-explained/" target="_blank" rel="noopener"><span class="lang-en">Try the interactive version</span><span class="lang-bn">ইন্টারঅ্যাকটিভ সংস্করণ দেখুন</span></a>
+          <a class="link" href="https://github.com/Israt24hub/bank-marketing-leakage" target="_blank" rel="noopener"><span data-i18n="projects.8">Read the write-up</span></a>
+          <a class="link" href="https://israt24hub.github.io/data-leakage-explained/" target="_blank" rel="noopener"><span data-i18n="projects.9">Try the interactive version</span></a>
         </p>
       </div>
       <figure class="feature-visual">
@@ -198,8 +195,7 @@
           <img src="img/projects/leakage-explainer.webp" width="800" height="500" loading="lazy" alt="The interactive explainer: column switches on the left, and an ROC curve that jumps up when call duration is switched on">
         </a>
         <figcaption>
-          <span class="lang-en">The interactive version: switch on call duration and watch the score jump.</span>
-          <span class="lang-bn">ইন্টারঅ্যাকটিভ সংস্করণ: call duration চালু করলেই স্কোর লাফিয়ে বাড়ে।</span>
+          <span data-i18n="projects.10">The interactive version: switch on call duration and watch the score jump.</span>
         </figcaption>
       </figure>
     </article>
@@ -207,13 +203,11 @@
     <article class="feature feature-flip" data-reveal>
       <div class="feature-text">
         <h3>LeakGuard</h3>
-        <p class="meta"><span class="lang-en">Open-source Python library</span><span class="lang-bn">ওপেন-সোর্স পাইথন লাইব্রেরি</span></p>
-        <p class="lang-en">A command-line tool and Python library that finds data leakage before it fools you: columns that predict the target suspiciously well, columns the whole model leans on, identifiers, duplicates, train/test overlap, and scores that collapse on a past-to-future split. Its exit codes let a CI pipeline stop on a serious leak.</p>
-        <p class="lang-bn">একটি কমান্ড-লাইন টুল ও পাইথন লাইব্রেরি, যা ডেটা লিকেজ আগেভাগেই ধরে ফেলে: যে কলাম টার্গেটকে সন্দেহজনকভাবে ভালো পূর্বাভাস দেয়, যে কলামের ওপর পুরো মডেল নির্ভর করে, আইডেন্টিফায়ার, ডুপ্লিকেট, ট্রেন/টেস্ট ওভারল্যাপ এবং সময়ভিত্তিক স্প্লিটে ভেঙে পড়া স্কোর। গুরুতর লিকেজ পেলে এর এক্সিট কোড CI পাইপলাইন থামিয়ে দিতে পারে।</p>
-        <p class="built lang-en">Built with Python, pandas and scikit-learn; tested on Python 3.10–3.13 with GitHub Actions.</p>
-        <p class="built lang-bn">ব্যবহৃত: Python, pandas ও scikit-learn; GitHub Actions-এ Python 3.10–3.13-এ পরীক্ষিত।</p>
+        <p class="meta"><span data-i18n="projects.11">Open-source Python library</span></p>
+        <p data-i18n="projects.12">A command-line tool and Python library that finds data leakage before it fools you: columns that predict the target suspiciously well, columns the whole model leans on, identifiers, duplicates, train/test overlap, and scores that collapse on a past-to-future split. Its exit codes let a CI pipeline stop on a serious leak.</p>
+        <p class="built" data-i18n="projects.13">Built with Python, pandas and scikit-learn; tested on Python 3.10–3.13 with GitHub Actions.</p>
         <p class="links">
-          <a class="link" href="https://github.com/Israt24hub/leakguard" target="_blank" rel="noopener"><span class="lang-en">View the code</span><span class="lang-bn">কোড দেখুন</span></a>
+          <a class="link" href="https://github.com/Israt24hub/leakguard" target="_blank" rel="noopener"><span data-i18n="projects.14">View the code</span></a>
         </p>
       </div>
       <figure class="feature-visual">
@@ -234,25 +228,23 @@
 <span class="t-line t-exit">exit code 1: the CI check fails</span><span class="t-caret" aria-hidden="true"></span></code></pre>
         </div>
         <figcaption>
-          <span class="lang-en">Real output, shortened, on a demo dataset shaped like UCI Bank Marketing.</span>
-          <span class="lang-bn">UCI ব্যাংক মার্কেটিং-এর আদলে তৈরি ডেমো ডেটাসেটে আসল আউটপুট (সংক্ষেপিত)।</span>
+          <span data-i18n="projects.15">Real output, shortened, on a demo dataset shaped like UCI Bank Marketing.</span>
         </figcaption>
       </figure>
     </article>
 
-    <h3 class="subhead" data-reveal><span class="lang-en">Also on the web</span><span class="lang-bn">ওয়েবে আরও</span></h3>
+    <h3 class="subhead" data-reveal><span data-i18n="projects.16">Also on the web</span></h3>
     <div class="web-grid">
       <article class="web-card" data-reveal>
         <a class="shot" href="https://israt24hub.github.io/chime-gate/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
           <img src="img/projects/chime-gate.webp" width="800" height="500" alt="" loading="lazy">
         </a>
         <h4>Chime Gate</h4>
-        <p class="meta"><span class="lang-en">Creative coding</span><span class="lang-bn">ক্রিয়েটিভ কোডিং</span></p>
-        <p class="lang-en">A curtain of verses hanging in a temple doorway that parts under your cursor and rings like wind chimes. Rope physics on canvas and sound synthesised with the Web Audio API, no libraries. The curtain on this page runs on the same code.</p>
-        <p class="lang-bn">মন্দিরের দরজায় ঝোলানো কবিতার পর্দা, যা কার্সরের ছোঁয়ায় সরে যায় আর উইন্ড চাইমের মতো বেজে ওঠে। ক্যানভাসে রোপ ফিজিক্স ও Web Audio API-তে তৈরি শব্দ, কোনো লাইব্রেরি ছাড়াই। এই পেজের পর্দাটিও একই কোডে চলে।</p>
+        <p class="meta"><span data-i18n="projects.17">Creative coding</span></p>
+        <p data-i18n="projects.18">A curtain of verses hanging in a temple doorway that parts under your cursor and rings like wind chimes. Rope physics on canvas and sound synthesised with the Web Audio API, no libraries. The curtain on this page runs on the same code.</p>
         <p class="links">
-          <a class="link" href="https://israt24hub.github.io/chime-gate/" target="_blank" rel="noopener"><span class="lang-en">Open the live site</span><span class="lang-bn">লাইভ সাইট খুলুন</span></a>
-          <a class="link" href="https://github.com/Israt24hub/chime-gate" target="_blank" rel="noopener"><span class="lang-en">View the code</span><span class="lang-bn">কোড দেখুন</span></a>
+          <a class="link" href="https://israt24hub.github.io/chime-gate/" target="_blank" rel="noopener"><span data-i18n="projects.19">Open the live site</span></a>
+          <a class="link" href="https://github.com/Israt24hub/chime-gate" target="_blank" rel="noopener"><span data-i18n="projects.14">View the code</span></a>
         </p>
       </article>
       <article class="web-card" data-reveal>
@@ -260,45 +252,41 @@
           <img src="img/projects/study-hub.webp" width="800" height="500" alt="" loading="lazy">
         </a>
         <h4>Study Hub</h4>
-        <p class="meta"><span class="lang-en">Open course notes</span><span class="lang-bn">উন্মুক্ত কোর্স নোট</span></p>
-        <p class="lang-en">My course notes and reports from NSU in one searchable library, free to read and download. Uploading a file to GitHub rebuilds the site automatically with GitHub Actions.</p>
-        <p class="lang-bn">এনএসইউ-র কোর্স নোট ও রিপোর্ট এক জায়গায়, সহজে খোঁজা যায়, বিনামূল্যে পড়া ও ডাউনলোড করা যায়। গিটহাবে ফাইল আপলোড করলেই GitHub Actions দিয়ে সাইট নিজে থেকে আপডেট হয়।</p>
+        <p class="meta"><span data-i18n="projects.20">Open course notes</span></p>
+        <p data-i18n="projects.21">My course notes and reports from NSU in one searchable library, free to read and download. Uploading a file to GitHub rebuilds the site automatically with GitHub Actions.</p>
         <p class="links">
-          <a class="link" href="https://israt24hub.github.io/study-hub/" target="_blank" rel="noopener"><span class="lang-en">Open the live site</span><span class="lang-bn">লাইভ সাইট খুলুন</span></a>
-          <a class="link" href="https://github.com/Israt24hub/study-hub" target="_blank" rel="noopener"><span class="lang-en">View the code</span><span class="lang-bn">কোড দেখুন</span></a>
+          <a class="link" href="https://israt24hub.github.io/study-hub/" target="_blank" rel="noopener"><span data-i18n="projects.19">Open the live site</span></a>
+          <a class="link" href="https://github.com/Israt24hub/study-hub" target="_blank" rel="noopener"><span data-i18n="projects.14">View the code</span></a>
         </p>
       </article>
     </div>
 
-    <h3 class="subhead" data-reveal><span class="lang-en">Research and coursework</span><span class="lang-bn">গবেষণা ও কোর্সওয়ার্ক</span></h3>
+    <h3 class="subhead" data-reveal><span data-i18n="projects.22">Research and coursework</span></h3>
     <div class="research" data-reveal>
       <article class="research-item">
-        <h4><span class="lang-en">StressSense — ML for Mental Health Prediction</span><span class="lang-bn">StressSense — মানসিক স্বাস্থ্য পূর্বাভাসের জন্য মেশিন লার্নিং</span></h4>
+        <h4><span data-i18n="projects.23">StressSense — ML for Mental Health Prediction</span></h4>
         <div>
-          <p class="lang-en">Predicting stress and depression levels from tabular data — covering preprocessing, exploratory analysis, class-imbalance handling, model training, evaluation, and interpretability with SHAP and LIME.</p>
-          <p class="lang-bn">তথ্য থেকে স্ট্রেস ও ডিপ্রেশনের মাত্রা পূর্বাভাসকারী প্রকল্প — প্রিপ্রসেসিং, এক্সপ্লোরেটরি অ্যানালাইসিস, ইমব্যালান্স হ্যান্ডলিং, মডেল ট্রেনিং, ইভ্যালুয়েশন এবং SHAP ও LIME দিয়ে ইন্টারপ্রিটেবিলিটি বিশ্লেষণ।</p>
+          <p data-i18n="projects.24">Predicting stress and depression levels from tabular data — covering preprocessing, exploratory analysis, class-imbalance handling, model training, evaluation, and interpretability with SHAP and LIME.</p>
           <p class="built">Machine learning, classification, imbalanced data, explainable AI</p>
         </div>
       </article>
       <article class="research-item">
-        <h4><span class="lang-en">EHR Pre-Screening &amp; Medical Information Extraction</span><span class="lang-bn">ইএইচআর প্রি-স্ক্রিনিং ও মেডিকেল তথ্য নিষ্কাশন সিস্টেম</span></h4>
+        <h4><span data-i18n="projects.25">EHR Pre-Screening &amp; Medical Information Extraction</span></h4>
         <div>
-          <p class="lang-en">A research-oriented system exploring Speech → Bangla/Banglish Processing → Information Extraction → EHR → Medical Summary. I worked on the backend: API functionality and AI-service integration.</p>
-          <p class="lang-bn">Speech → বাংলা/বাংলিশ প্রসেসিং → তথ্য নিষ্কাশন → EHR → মেডিকেল সারাংশ — এই কর্মপ্রবাহ নিয়ে একটি গবেষণাধর্মী সিস্টেম। আমি ব্যাকএন্ডে এপিআই ফাংশনালিটি ও এআই সার্ভিস ইন্টিগ্রেশন নিয়ে কাজ করেছি।</p>
+          <p data-i18n="projects.26">A research-oriented system exploring Speech → Bangla/Banglish Processing → Information Extraction → EHR → Medical Summary. I worked on the backend: API functionality and AI-service integration.</p>
           <p class="built">Python, FastAPI, SQLite, AI/LLM APIs, FHIR</p>
         </div>
       </article>
       <article class="research-item">
-        <h4><span class="lang-en">Deep Learning &amp; Multimodal AI Research</span><span class="lang-bn">ডিপ লার্নিং ও মাল্টিমোডাল এআই গবেষণা</span></h4>
+        <h4><span data-i18n="projects.27">Deep Learning &amp; Multimodal AI Research</span></h4>
         <div>
-          <p class="lang-en">Research-oriented work on medical imaging, multimodal learning, vision-language models, and misinformation detection — exploring how combining modalities improves reliability.</p>
-          <p class="lang-bn">মেডিকেল ইমেজিং, মাল্টিমোডাল লার্নিং, ভিশন-ল্যাঙ্গুয়েজ মডেল ও মিসইনফরমেশন ডিটেকশন নিয়ে গবেষণাধর্মী কাজ — বিভিন্ন মোডালিটি একত্রিত করে নির্ভরযোগ্যতা কীভাবে বাড়ানো যায় তার অন্বেষণ।</p>
+          <p data-i18n="projects.28">Research-oriented work on medical imaging, multimodal learning, vision-language models, and misinformation detection — exploring how combining modalities improves reliability.</p>
           <p class="built">Vision-language models, multimodal AI, misinformation detection</p>
         </div>
       </article>
     </div>
     <p class="more" data-reveal>
-      <a class="link" href="https://github.com/Israt24hub?tab=repositories" target="_blank" rel="noopener"><span class="lang-en">See all my repositories on GitHub</span><span class="lang-bn">গিটহাবে আমার সব রিপোজিটরি দেখুন</span></a>
+      <a class="link" href="https://github.com/Israt24hub?tab=repositories" target="_blank" rel="noopener"><span data-i18n="projects.29">See all my repositories on GitHub</span></a>
     </p>
   </div>
 </section>
@@ -306,37 +294,37 @@
 <!-- ============================== SKILLS ============================== -->
 <section id="skills" class="section">
   <div class="container">
-    <h2 class="title" data-reveal><span class="lang-en">Technical toolkit</span><span class="lang-bn">টেকনিক্যাল দক্ষতা</span></h2>
+    <h2 class="title" data-reveal><span data-i18n="skills.1">Technical toolkit</span></h2>
     <div class="skills" data-reveal>
       <div class="skill-col">
-        <h3><span class="lang-en">AI &amp; Machine Learning</span><span class="lang-bn">এআই ও মেশিন লার্নিং</span></h3>
+        <h3><span data-i18n="skills.2">AI &amp; Machine Learning</span></h3>
         <ul>
-          <li><span class="lang-en">Machine Learning · Deep Learning</span><span class="lang-bn">মেশিন লার্নিং · ডিপ লার্নিং</span></li>
-          <li><span class="lang-en">Natural Language Processing</span><span class="lang-bn">ন্যাচারাল ল্যাঙ্গুয়েজ প্রসেসিং</span></li>
-          <li><span class="lang-en">Multimodal AI · LLMs</span><span class="lang-bn">মাল্টিমোডাল এআই · এলএলএম</span></li>
-          <li><span class="lang-en">Model Evaluation · Explainable AI</span><span class="lang-bn">মডেল ইভ্যালুয়েশন · এক্সপ্লেইনেবল এআই</span></li>
+          <li><span data-i18n="skills.3">Machine Learning · Deep Learning</span></li>
+          <li><span data-i18n="skills.4">Natural Language Processing</span></li>
+          <li><span data-i18n="skills.5">Multimodal AI · LLMs</span></li>
+          <li><span data-i18n="skills.6">Model Evaluation · Explainable AI</span></li>
         </ul>
       </div>
       <div class="skill-col">
-        <h3><span class="lang-en">Software &amp; Backend</span><span class="lang-bn">সফটওয়্যার ও ব্যাকএন্ড</span></h3>
+        <h3><span data-i18n="skills.7">Software &amp; Backend</span></h3>
         <ul>
           <li>Python · FastAPI · REST APIs</li>
           <li>SQL / SQLite</li>
           <li>Git &amp; GitHub · Docker</li>
-          <li><span class="lang-en">AI/LLM API integration</span><span class="lang-bn">এআই/এলএলএম এপিআই ইন্টিগ্রেশন</span></li>
+          <li><span data-i18n="skills.8">AI/LLM API integration</span></li>
         </ul>
       </div>
       <div class="skill-col">
-        <h3><span class="lang-en">Data</span><span class="lang-bn">ডেটা</span></h3>
+        <h3><span data-i18n="skills.9">Data</span></h3>
         <ul>
-          <li><span class="lang-en">Data preprocessing · EDA</span><span class="lang-bn">ডেটা প্রিপ্রসেসিং · ইডিএ</span></li>
-          <li><span class="lang-en">Feature engineering</span><span class="lang-bn">ফিচার ইঞ্জিনিয়ারিং</span></li>
-          <li><span class="lang-en">Imbalanced datasets</span><span class="lang-bn">ইমব্যালান্সড ডেটাসেট</span></li>
-          <li><span class="lang-en">Statistical analysis · Databases</span><span class="lang-bn">স্ট্যাটিসটিক্যাল অ্যানালাইসিস · ডেটাবেজ</span></li>
+          <li><span data-i18n="skills.10">Data preprocessing · EDA</span></li>
+          <li><span data-i18n="skills.11">Feature engineering</span></li>
+          <li><span data-i18n="skills.12">Imbalanced datasets</span></li>
+          <li><span data-i18n="skills.13">Statistical analysis · Databases</span></li>
         </ul>
       </div>
       <div class="skill-col">
-        <h3><span class="lang-en">Libraries &amp; languages</span><span class="lang-bn">লাইব্রেরি ও ভাষা</span></h3>
+        <h3><span data-i18n="skills.14">Libraries &amp; languages</span></h3>
         <ul>
           <li>PyTorch · scikit-learn · pandas</li>
           <li>Hugging Face Transformers</li>
@@ -351,41 +339,38 @@
 <!-- ============================== EXPERIENCE + EDUCATION ============================== -->
 <section id="experience" class="section">
   <div class="container">
-    <h2 class="title" data-reveal><span class="lang-en">Work, teaching and learning</span><span class="lang-bn">কাজ, শিক্ষকতা ও পড়াশোনা</span></h2>
+    <h2 class="title" data-reveal><span data-i18n="experience.1">Work, teaching and learning</span></h2>
     <div class="journey">
       <div>
-        <h3 class="subhead subhead-plain" data-reveal><span class="lang-en">Experience</span><span class="lang-bn">অভিজ্ঞতা</span></h3>
+        <h3 class="subhead subhead-plain" data-reveal><span data-i18n="nav.4">Experience</span></h3>
         <ol class="timeline">
           <li class="tl-item" data-reveal>
-            <h4><span class="lang-en">Sales Executive — Silva Scent</span><span class="lang-bn">সেলস এক্সিকিউটিভ — Silva Scent</span></h4>
-            <p class="meta"><span class="lang-en">3-month paid experience</span><span class="lang-bn">৩ মাসের পেইড অভিজ্ঞতা</span></p>
-            <p class="lang-en">Contributed to social media content creation, marketing activities, customer communication, graphic/content design, and brand promotion for a new perfume brand.</p>
-            <p class="lang-bn">একটি নতুন পারফিউম ব্র্যান্ডের জন্য সোশ্যাল মিডিয়া কনটেন্ট তৈরি, মার্কেটিং, কাস্টমার কমিউনিকেশন, গ্রাফিক/কনটেন্ট ডিজাইন ও ব্র্যান্ড প্রমোশনে অবদান রেখেছি।</p>
+            <h4><span data-i18n="experience.2">Sales Executive — Silva Scent</span></h4>
+            <p class="meta"><span data-i18n="experience.3">3-month paid experience</span></p>
+            <p data-i18n="experience.4">Contributed to social media content creation, marketing activities, customer communication, graphic/content design, and brand promotion for a new perfume brand.</p>
           </li>
           <li class="tl-item" data-reveal>
-            <h4><span class="lang-en">Private Tutor</span><span class="lang-bn">প্রাইভেট টিউটর</span></h4>
-            <p class="meta"><span class="lang-en">Mathematics and English, several years</span><span class="lang-bn">গণিত ও ইংরেজি, কয়েক বছর</span></p>
-            <p class="lang-en">Several years tutoring English-medium (Cambridge/IB-style) students in mathematics and English — building communication, patience, and the ability to simplify complex concepts.</p>
-            <p class="lang-bn">ইংরেজি মাধ্যম (কেমব্রিজ/আইবি ধারা) শিক্ষার্থীদের গণিত ও ইংরেজি বিষয়ে বছরের পর বছর টিউটরিং — যোগাযোগ, ধৈর্য ও জটিল বিষয় সহজভাবে বোঝানোর দক্ষতা গড়ে তুলেছি।</p>
+            <h4><span data-i18n="experience.5">Private Tutor</span></h4>
+            <p class="meta"><span data-i18n="experience.6">Mathematics and English, several years</span></p>
+            <p data-i18n="experience.7">Several years tutoring English-medium (Cambridge/IB-style) students in mathematics and English — building communication, patience, and the ability to simplify complex concepts.</p>
           </li>
         </ol>
       </div>
       <div>
-        <h3 class="subhead subhead-plain" data-reveal><span class="lang-en">Education</span><span class="lang-bn">শিক্ষাগত যোগ্যতা</span></h3>
+        <h3 class="subhead subhead-plain" data-reveal><span data-i18n="experience.8">Education</span></h3>
         <ol class="timeline">
           <li class="tl-item" data-reveal>
-            <h4><span class="lang-en">BSc in Computer Science &amp; Engineering</span><span class="lang-bn">বিএসসি ইন কম্পিউটার সায়েন্স অ্যান্ড ইঞ্জিনিয়ারিং</span></h4>
-            <p class="meta"><span class="lang-en">North South University (NSU) — in progress</span><span class="lang-bn">নর্থ সাউথ ইউনিভার্সিটি (NSU) — চলমান</span></p>
-            <p class="lang-en">Coursework across AI &amp; Machine Learning, Data Science, Database Systems, Software Engineering, Algorithms, Probability &amp; Statistics, Deep Learning, and NLP.</p>
-            <p class="lang-bn">এআই ও মেশিন লার্নিং, ডেটা সায়েন্স, ডেটাবেজ সিস্টেম, সফটওয়্যার ইঞ্জিনিয়ারিং, অ্যালগরিদম, প্রোবাবিলিটি ও স্ট্যাটিসটিক্স, ডিপ লার্নিং এবং এনএলপি বিষয়ে কোর্সওয়ার্ক।</p>
+            <h4><span data-i18n="experience.9">BSc in Computer Science &amp; Engineering</span></h4>
+            <p class="meta"><span data-i18n="experience.10">North South University (NSU) — in progress</span></p>
+            <p data-i18n="experience.11">Coursework across AI &amp; Machine Learning, Data Science, Database Systems, Software Engineering, Algorithms, Probability &amp; Statistics, Deep Learning, and NLP.</p>
           </li>
           <li class="tl-item" data-reveal>
-            <h4><span class="lang-en">Higher Secondary Certificate (HSC)</span><span class="lang-bn">উচ্চ মাধ্যমিক সার্টিফিকেট (এইচএসসি)</span></h4>
-            <p class="meta"><span class="lang-en">Mirpur Girls' Ideal Laboratory Institute — 2020, GPA 5.00</span><span class="lang-bn">মিরপুর গার্লস আইডিয়াল ল্যাবরেটরি ইনস্টিটিউট — ২০২০, জিপিএ ৫.০০</span></p>
+            <h4><span data-i18n="experience.12">Higher Secondary Certificate (HSC)</span></h4>
+            <p class="meta"><span data-i18n="experience.13">Mirpur Girls' Ideal Laboratory Institute — 2020, GPA 5.00</span></p>
           </li>
           <li class="tl-item" data-reveal>
-            <h4><span class="lang-en">Secondary School Certificate (SSC)</span><span class="lang-bn">মাধ্যমিক স্কুল সার্টিফিকেট (এসএসসি)</span></h4>
-            <p class="meta"><span class="lang-en">Balakhal Chandraban Girls High School — 2017, GPA 4.77</span><span class="lang-bn">বলাখাল চন্দ্রাবন গার্লস হাই স্কুল — ২০১৭, জিপিএ ৪.৭৭</span></p>
+            <h4><span data-i18n="experience.14">Secondary School Certificate (SSC)</span></h4>
+            <p class="meta"><span data-i18n="experience.15">Balakhal Chandraban Girls High School — 2017, GPA 4.77</span></p>
           </li>
         </ol>
       </div>
@@ -396,27 +381,23 @@
 <!-- ============================== LEADERSHIP ============================== -->
 <section id="leadership" class="section">
   <div class="container">
-    <h2 class="title" data-reveal><span class="lang-en">Beyond the classroom</span><span class="lang-bn">শ্রেণিকক্ষের বাইরে</span></h2>
+    <h2 class="title" data-reveal><span data-i18n="leadership.1">Beyond the classroom</span></h2>
     <div class="lead-grid" data-reveal>
       <div class="lead-item">
-        <h3><span class="lang-en">SheSTEM Campus Ambassador</span><span class="lang-bn">SheSTEM ক্যাম্পাস অ্যাম্বাসেডর</span></h3>
-        <p class="lang-en">Recruited mentees for an online female STEM mentorship program; supported students with career guidance, CV, and interview prep. Recognized for recruitment performance.</p>
-        <p class="lang-bn">অনলাইন নারী STEM মেন্টরশিপ প্রোগ্রামের জন্য মেন্টি রিক্রুট করেছি; ক্যারিয়ার পরামর্শ, সিভি ও ইন্টারভিউ প্রস্তুতিতে সহায়তা করেছি। রিক্রুটমেন্ট পারফরম্যান্সের জন্য স্বীকৃতি পেয়েছি।</p>
+        <h3><span data-i18n="leadership.2">SheSTEM Campus Ambassador</span></h3>
+        <p data-i18n="leadership.3">Recruited mentees for an online female STEM mentorship program; supported students with career guidance, CV, and interview prep. Recognized for recruitment performance.</p>
       </div>
       <div class="lead-item">
-        <h3><span class="lang-en">NSUCEC — General Member</span><span class="lang-bn">NSUCEC — সাধারণ সদস্য</span></h3>
-        <p class="lang-en">Involved in event management, volunteering, planning, research, and anchoring.</p>
-        <p class="lang-bn">ইভেন্ট ম্যানেজমেন্ট, ভলান্টিয়ারিং, পরিকল্পনা, গবেষণা ও অ্যাংকরিং কার্যক্রমে যুক্ত ছিলাম।</p>
+        <h3><span data-i18n="leadership.4">NSUCEC — General Member</span></h3>
+        <p data-i18n="leadership.5">Involved in event management, volunteering, planning, research, and anchoring.</p>
       </div>
       <div class="lead-item">
-        <h3><span class="lang-en">NSU Tech Fest 2025 &amp; GameWave 2.0</span><span class="lang-bn">NSU টেক ফেস্ট ২০২৫ ও গেমওয়েভ ২.০</span></h3>
-        <p class="lang-en">Organizer/volunteer for both events.</p>
-        <p class="lang-bn">উভয় ইভেন্টে আয়োজক/স্বেচ্ছাসেবক হিসেবে কাজ করেছি।</p>
+        <h3><span data-i18n="leadership.6">NSU Tech Fest 2025 &amp; GameWave 2.0</span></h3>
+        <p data-i18n="leadership.7">Organizer/volunteer for both events.</p>
       </div>
       <div class="lead-item">
-        <h3><span class="lang-en">Community Volunteering &amp; Student Leadership</span><span class="lang-bn">কমিউনিটি ভলান্টিয়ারিং ও শিক্ষার্থী নেতৃত্ব</span></h3>
-        <p class="lang-en">Flood-relief coordination; served as class representative through school and college.</p>
-        <p class="lang-bn">বন্যা ত্রাণ সমন্বয়; স্কুল ও কলেজ জীবনে শ্রেণি প্রতিনিধি হিসেবে দায়িত্ব পালন।</p>
+        <h3><span data-i18n="leadership.8">Community Volunteering &amp; Student Leadership</span></h3>
+        <p data-i18n="leadership.9">Flood-relief coordination; served as class representative through school and college.</p>
       </div>
     </div>
   </div>
@@ -425,20 +406,20 @@
 <!-- ============================== INTERESTS ============================== -->
 <section id="interests" class="section">
   <div class="container">
-    <h2 class="title" data-reveal><span class="lang-en">Beyond technology</span><span class="lang-bn">প্রযুক্তির বাইরে</span></h2>
+    <h2 class="title" data-reveal><span data-i18n="interests.1">Beyond technology</span></h2>
     <div class="interest-grid" data-reveal>
-      <span class="interest"><span aria-hidden="true">🎨</span> <span class="lang-en">Creative Content</span><span class="lang-bn">সৃজনশীল কনটেন্ট</span></span>
-      <span class="interest"><span aria-hidden="true">📸</span> <span class="lang-en">Photography &amp; Aesthetics</span><span class="lang-bn">ফটোগ্রাফি ও নান্দনিকতা</span></span>
-      <span class="interest"><span aria-hidden="true">🎤</span> <span class="lang-en">Public Speaking &amp; Anchoring</span><span class="lang-bn">পাবলিক স্পিকিং ও অ্যাংকরিং</span></span>
-      <span class="interest"><span aria-hidden="true">🤝</span> <span class="lang-en">Volunteering &amp; Mentorship</span><span class="lang-bn">ভলান্টিয়ারিং ও মেন্টরশিপ</span></span>
-      <span class="interest"><span aria-hidden="true">☕</span> <span class="lang-en">Cafés &amp; Bookstores</span><span class="lang-bn">ক্যাফে ও বইয়ের দোকান</span></span>
-      <span class="interest"><span aria-hidden="true">✍️</span> <span class="lang-en">Writing &amp; Personal Expression</span><span class="lang-bn">লেখালেখি ও আত্মপ্রকাশ</span></span>
+      <span class="interest"><span aria-hidden="true">🎨</span> <span data-i18n="interests.2">Creative Content</span></span>
+      <span class="interest"><span aria-hidden="true">📸</span> <span data-i18n="interests.3">Photography &amp; Aesthetics</span></span>
+      <span class="interest"><span aria-hidden="true">🎤</span> <span data-i18n="interests.4">Public Speaking &amp; Anchoring</span></span>
+      <span class="interest"><span aria-hidden="true">🤝</span> <span data-i18n="interests.5">Volunteering &amp; Mentorship</span></span>
+      <span class="interest"><span aria-hidden="true">☕</span> <span data-i18n="interests.6">Cafés &amp; Bookstores</span></span>
+      <span class="interest"><span aria-hidden="true">✍️</span> <span data-i18n="interests.7">Writing &amp; Personal Expression</span></span>
     </div>
     <button type="button" class="book-invite" id="open-book" aria-haspopup="dialog" data-reveal>
       <span class="book-invite-icon" aria-hidden="true">📚</span>
       <span class="book-invite-text">
-        <b><span class="lang-en">Reading &amp; Book Culture — BookaholiChael</span><span class="lang-bn">পড়াশোনা ও বই সংস্কৃতি — BookaholiChael</span></b>
-        <small><span class="lang-en">Open the book</span><span class="lang-bn">বইটি খুলুন</span></small>
+        <b><span data-i18n="interests.8">Reading &amp; Book Culture — BookaholiChael</span></b>
+        <small><span data-i18n="interests.9">Open the book</span></small>
       </span>
     </button>
   </div>
@@ -449,15 +430,14 @@
 <section id="contact" class="section" data-email="">
   <div class="container">
     <div class="contact" data-reveal>
-      <h2 class="title contact-title"><span class="lang-en">Let's connect</span><span class="lang-bn">চলুন যুক্ত হই</span></h2>
+      <h2 class="title contact-title"><span data-i18n="contact.1">Let's connect</span></h2>
       <p class="contact-lede">
-        <span class="lang-en">Happy to talk about research, machine learning projects, or opportunities to learn and build.</span>
-        <span class="lang-bn">গবেষণা, মেশিন লার্নিং প্রজেক্ট কিংবা শেখা ও কাজ করার সুযোগ নিয়ে কথা বলতে আমি আগ্রহী।</span>
+        <span data-i18n="contact.2">Happy to talk about research, machine learning projects, or opportunities to learn and build.</span>
       </p>
       <div class="contact-links">
         <a class="contact-link" id="email-link" href="#" hidden>
           <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></g></svg>
-          <span><b><span class="lang-en">Email</span><span class="lang-bn">ইমেইল</span></b><small class="email-text"></small></span>
+          <span><b><span data-i18n="contact.3">Email</span></b><small class="email-text"></small></span>
         </a>
         <a class="contact-link" href="https://www.linkedin.com/in/israt-zaman-srity-286975370" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.8 0 0 .77 0 1.73v20.54C0 23.23.8 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
@@ -474,12 +454,12 @@
       </div>
       <form class="contact-form" id="contact-form" hidden>
         <div class="field-row">
-          <label><span class="lang-en">Your name</span><span class="lang-bn">আপনার নাম</span><input name="name" type="text" autocomplete="name" required></label>
-          <label><span class="lang-en">Your email</span><span class="lang-bn">আপনার ইমেইল</span><input name="email" type="email" autocomplete="email" required></label>
+          <label><span data-i18n="contact.4">Your name</span><input name="name" type="text" autocomplete="name" required></label>
+          <label><span data-i18n="contact.5">Your email</span><input name="email" type="email" autocomplete="email" required></label>
         </div>
-        <label><span class="lang-en">Message</span><span class="lang-bn">বার্তা</span><textarea name="message" rows="4" required></textarea></label>
-        <button type="submit" class="btn btn-primary"><span class="lang-en">Write the email</span><span class="lang-bn">ইমেইল লিখুন</span></button>
-        <p class="note"><span class="lang-en">This opens your email app with the message filled in.</span><span class="lang-bn">আপনার ইমেইল অ্যাপে বার্তাটি লেখা অবস্থায় খুলবে।</span></p>
+        <label><span data-i18n="contact.6">Message</span><textarea name="message" rows="4" required></textarea></label>
+        <button type="submit" class="btn btn-primary"><span data-i18n="contact.7">Write the email</span></button>
+        <p class="note"><span data-i18n="contact.8">This opens your email app with the message filled in.</span></p>
       </form>
     </div>
   </div>
@@ -489,10 +469,9 @@
 <footer class="footer">
   <div class="container footer-inner">
     <p>
-      <span class="lang-en">© <span class="year">2026</span> Israt Zaman Srity. Built with curiosity, code, and a few open books.</span>
-      <span class="lang-bn">© <span class="year">২০২৬</span> ইসরাত জামান শ্রীতি। কৌতূহল, কোড আর কিছু খোলা বই নিয়ে তৈরি।</span>
+      <span data-i18n="footer.1">© <span class="year">2026</span> Israt Zaman Srity. Built with curiosity, code, and a few open books.</span>
     </p>
-    <a class="link" href="#top"><span class="lang-en">Back to top</span><span class="lang-bn">উপরে ফিরুন</span></a>
+    <a class="link" href="#top"><span data-i18n="footer.2">Back to top</span></a>
   </div>
 </footer>
 
@@ -501,10 +480,9 @@
   <div class="book-arch" id="book-arch" aria-hidden="true"></div>
   <button type="button" id="book-sound" class="sound-btn book-sound" aria-pressed="false">
     <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path class="wave" d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.5a8 8 0 0 1 0 11"/></g></svg>
-    <span class="lang-en" data-on="Sound on" data-off="Turn on sound">Turn on sound</span>
-    <span class="lang-bn" data-on="শব্দ চালু" data-off="শব্দ চালু করুন">শব্দ চালু করুন</span>
+    <span class="sound-label" data-i18n="sound.off">Turn on sound</span>
   </button>
-  <button type="button" id="book-close" class="book-close"><span class="visually-hidden"><span class="lang-en">Close the book</span><span class="lang-bn">বইটি বন্ধ করুন</span></span><span aria-hidden="true">×</span></button>
+  <button type="button" id="book-close" class="book-close"><span class="visually-hidden"><span data-i18n="book.1">Close the book</span></span><span aria-hidden="true">×</span></button>
   <div class="book-stage">
     <div class="magic-title" id="book-title">
       <span class="sparkle" style="top:4px;left:12%;animation-delay:0s"></span>
@@ -513,8 +491,7 @@
       <span class="sparkle" style="top:-4px;left:85%;animation-delay:1.1s"></span>
       <span class="sparkle" style="top:20px;left:5%;animation-delay:1.5s"></span>
       <span class="sparkle" style="top:24px;left:92%;animation-delay:.6s"></span>
-      <div class="title-text lang-en">The Court of<br>BookaholiChael</div>
-      <div class="title-text lang-bn">দ্য কোর্ট অফ<br>বুকাহলিচায়েল</div>
+      <div class="title-text" data-i18n="book.2">The Court of<br>BookaholiChael</div>
     </div>
     <div class="storybook" aria-hidden="true">
       <div class="fan">
@@ -531,8 +508,7 @@
       <div class="book-base"></div>
     </div>
     <div class="book-content">
-      <p class="lang-en">A little kingdom of books, built one page at a time. Here I share recommendations, reading experiences, book photography, aesthetic content, and short-form videos — the creative, personal, expressive side of me that lives outside the lab.</p>
-      <p class="lang-bn">বই দিয়ে গড়া ছোট্ট এক রাজ্য, পাতায় পাতায়। এখানে আমি বই রিভিউ, পড়ার অভিজ্ঞতা, বই ফটোগ্রাফি, নান্দনিক কনটেন্ট এবং শর্ট-ফর্ম ভিডিও শেয়ার করি — গবেষণাগারের বাইরে আমার সৃজনশীল, ব্যক্তিগত ও প্রকাশমূলক দিকটি।</p>
+      <p data-i18n="book.3">A little kingdom of books, built one page at a time. Here I share recommendations, reading experiences, book photography, aesthetic content, and short-form videos — the creative, personal, expressive side of me that lives outside the lab.</p>
       <div class="page-links">
         <a href="https://www.instagram.com/bookaholichael/" target="_blank" rel="noopener">Instagram — @bookaholichael</a>
         <a href="https://www.tiktok.com/@bookaholichael?lang=en" target="_blank" rel="noopener">TikTok — @bookaholichael</a>
@@ -542,6 +518,7 @@
   </div>
 </div>
 
+<script src="js/i18n.js" defer></script>
 <script src="js/chime-curtain.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>

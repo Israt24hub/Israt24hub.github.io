@@ -1,5 +1,5 @@
 /*
- * Portfolio behaviour: language switch, navigation, the hero doorway, scroll effects,
+ * Portfolio behaviour: languages (English, Bangla, Hindi, German, Italian, Spanish), navigation, the hero doorway, scroll effects,
  * the LeakGuard terminal, the contact form and the BookaholiChael book.
  * Plain JavaScript, no libraries. Everything respects "reduce motion".
  */
@@ -10,35 +10,62 @@
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     var $ = function (sel, root) { return (root || document).querySelector(sel) }
     var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)) }
-    var lang = function () { return doc.getAttribute("data-lang") === "bn" ? "bn" : "en" }
+    var LANGS = ["en", "bn", "hi", "de", "it", "es"]
+    var lang = function () {
+        var l = doc.getAttribute("data-lang")
+        return LANGS.indexOf(l) !== -1 ? l : "en"
+    }
     var BN_DIGITS = "০১২৩৪৫৬৭৮৯"
     var toBn = function (s) { return String(s).replace(/\d/g, function (d) { return BN_DIGITS[d] }) }
 
     /* ------------------------------------------------------------------ */
-    /* Language                                                             */
+    /* Languages: English is written in the page, the rest is in js/i18n.js */
     /* ------------------------------------------------------------------ */
-    var langBtn = $("#lang-toggle")
-    function labelLangButton() {
-        langBtn.setAttribute("aria-label", lang() === "en" ? "Show this page in Bangla" : "পেজটি ইংরেজিতে দেখুন")
+    var I18N = window.I18N || {}
+    var texts = $$("[data-i18n]")
+    var english = {}
+    texts.forEach(function (el) { english[el.getAttribute("data-i18n")] = el.innerHTML })
+
+    function t(key, code) {
+        code = code || lang()
+        var own = I18N[code] && I18N[code][key]
+        if (code !== "en" && own != null) return own
+        if (english[key] != null) return english[key]
+        return I18N.en && I18N.en[key] != null ? I18N.en[key] : ""
     }
-    function applyLang(next) {
-        doc.setAttribute("data-lang", next)
-        doc.lang = next
-        try { localStorage.setItem("portfolio-lang", next) } catch (e) {}
-        labelLangButton()
+    function applyTexts(code) {
+        texts.forEach(function (el) {
+            var v = t(el.getAttribute("data-i18n"), code)
+            if (v && el.innerHTML !== v) el.innerHTML = v
+        })
+        // the smaller name line is Bangla on the Latin-script pages, Latin on the Bangla and Hindi pages
+        var alt = $("#hero-alt")
+        if (alt) alt.lang = code === "bn" || code === "hi" ? "en" : "bn"
+        var year = new Date().getFullYear()
+        $$(".footer .year").forEach(function (el) { el.textContent = code === "bn" ? toBn(year) : String(year) })
+    }
+
+    var langSelect = $("#lang-select")
+    function applyLang(code, save) {
+        doc.setAttribute("data-lang", code)
+        doc.lang = code
+        if (save) try { localStorage.setItem("portfolio-lang", code) } catch (e) {}
+        langSelect.value = code
+        applyTexts(code)
+        doc.classList.remove("i18n-pending")
         moveIndicator()
         updateTimelines()
+        setChimes(code)
     }
-    langBtn.addEventListener("click", function () {
-        var next = lang() === "en" ? "bn" : "en"
-        if (reduce) return applyLang(next)
+    langSelect.addEventListener("change", function () {
+        var code = langSelect.value
+        if (reduce) return applyLang(code, true)
         doc.classList.add("lang-switching")
         setTimeout(function () {
-            applyLang(next)
+            applyLang(code, true)
             requestAnimationFrame(function () { doc.classList.remove("lang-switching") })
         }, 150)
     })
-    labelLangButton()
 
     /* ------------------------------------------------------------------ */
     /* Navigation: background on scroll, current section, phone menu        */
@@ -142,8 +169,31 @@
     /* ------------------------------------------------------------------ */
     /* Hero: the Bangla alphabet hanging in a doorway                       */
     /* ------------------------------------------------------------------ */
-    // vowels and consonants, one code point each so every bead is a whole letter
-    var ALPHABET = "অআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহড়ঢ়য়ৎ"
+    // The words come from "chimes.words" in each language; the typeface follows the script.
+    var CHIME_FONTS = {
+        bn: '"Noto Sans Bengali", "Nirmala UI", "Vrinda", sans-serif',
+        hi: '"Noto Sans Devanagari", "Nirmala UI", "Mangal", sans-serif',
+        latin: '"Newsreader", Georgia, "Times New Roman", serif',
+    }
+    function chimeFont(code) { return CHIME_FONTS[code] || CHIME_FONTS.latin }
+    function chimeWords(code) { return t("chimes.words", code) }
+    function loadChimeFont(code) {
+        if (!document.fonts || !document.fonts.load) return Promise.resolve()
+        var wait = new Promise(function (r) { setTimeout(r, 1500) })
+        return Promise.race([document.fonts.load("15px " + chimeFont(code), chimeWords(code).slice(0, 16)), wait]).catch(function () {})
+    }
+    // switching language re-hangs the curtain with the new words
+    function setChimes(code) {
+        if (!heroCurtain) return
+        loadChimeFont(code).then(function () {
+            if (code !== lang()) return
+            heroCurtain.set({ text: chimeWords(code), fontFamily: chimeFont(code) })
+            if (reduce) return
+            arch.classList.remove("is-unrolled")
+            void arch.offsetWidth
+            arch.classList.add("is-unrolled")
+        })
+    }
     var arch = $("#hero-arch")
     var archPath = $(".arch-line path", arch)
     var heroCurtain = null
@@ -163,8 +213,8 @@
     function startHeroCurtain() {
         if (!window.ChimeCurtain || heroCurtain) return
         heroCurtain = new ChimeCurtain(arch, {
-            text: ALPHABET,
-            fontFamily: '"Noto Sans Bengali", "Nirmala UI", "Vrinda", sans-serif',
+            text: chimeWords(lang()),
+            fontFamily: chimeFont(lang()),
             color: "rgba(196, 181, 253, 0.92)",
             accentColor: "#F0ABFC",
             accentAmount: 0.16,
@@ -211,7 +261,9 @@
     var heroSound = $("#hero-sound")
     function labelSound(btn, on) {
         btn.setAttribute("aria-pressed", on ? "true" : "false")
-        $$("[data-on]", btn).forEach(function (s) { s.textContent = on ? s.getAttribute("data-on") : s.getAttribute("data-off") })
+        var label = $(".sound-label", btn)
+        label.setAttribute("data-i18n", on ? "sound.on" : "sound.off")
+        label.innerHTML = t(label.getAttribute("data-i18n"))
     }
     heroSound.addEventListener("click", function () {
         if (!heroCurtain) return
@@ -222,9 +274,7 @@
     })
 
     drawArchLine()
-    var fontsReady = document.fonts && document.fonts.load
-        ? Promise.race([document.fonts.load('15px "Noto Sans Bengali"', "ক"), new Promise(function (r) { setTimeout(r, 1500) })])
-        : Promise.resolve()
+    var fontsReady = loadChimeFont(lang())
     var pageFonts = document.fonts ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 800) })]) : Promise.resolve()
 
     pageFonts.then(function () {
@@ -301,14 +351,6 @@
             window.location.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body)
         })
     }
-
-    /* ------------------------------------------------------------------ */
-    /* Footer year                                                          */
-    /* ------------------------------------------------------------------ */
-    var year = new Date().getFullYear()
-    $$(".footer .year").forEach(function (el) {
-        el.textContent = el.closest(".lang-bn") ? toBn(year) : String(year)
-    })
 
     /* ------------------------------------------------------------------ */
     /* BookaholiChael: the book opens behind a curtain of its own name      */
@@ -401,4 +443,7 @@
             first.focus()
         }
     })
+
+    // show the page in the saved language (or English)
+    applyLang(lang(), false)
 })()

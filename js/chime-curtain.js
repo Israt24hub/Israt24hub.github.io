@@ -153,6 +153,15 @@
 
     var FTL_DAMP = 0.9
 
+    // One bead per visible letter. Scripts like Bangla and Hindi attach vowel signs to the
+    // letter before them, so split into grapheme clusters instead of single code points.
+    var segmenter = typeof Intl !== "undefined" && Intl.Segmenter ? new Intl.Segmenter(undefined, { granularity: "grapheme" }) : null
+    function splitGlyphs(text) {
+        text = (text || "·").replace(/\s+/g, " ")
+        if (segmenter) return Array.from(segmenter.segment(text), function (s) { return s.segment })
+        return Array.from(text)
+    }
+
     function buildSim(w, h, o) {
         var gap = Math.max(3, (o.fontSize * o.letterSpacing) / Math.max(0.2, o.density))
         var seg = Math.max(3, o.fontSize * o.lineHeight)
@@ -164,7 +173,7 @@
         var px = new Float32Array(total)
         var py = new Float32Array(total)
         var rnd = new Float32Array(total)
-        var text = Array.from((o.text || "·").replace(/\s+/g, " "))
+        var text = splitGlyphs(o.text)
         var L = text.length || 1
         var glyph = new Array(total)
         for (var c = 0; c < C; c++) {

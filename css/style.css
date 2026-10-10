@@ -23,6 +23,9 @@
 @font-face { font-family: "Noto Sans Bengali"; font-style: normal; font-weight: 100 900; font-display: swap;
   src: url(../fonts/noto-sans-bengali-bengali-wght-normal.woff2) format("woff2");
   unicode-range: U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0, U+1CD2, U+1CD5-1CD6, U+1CD8, U+1CE1, U+1CEA, U+1CED, U+1CF2, U+1CF5-1CF7, U+200C-200D, U+20B9, U+25CC, U+A8F1; }
+@font-face { font-family: "Noto Sans Devanagari"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url(../fonts/noto-sans-devanagari-devanagari-wght-normal.woff2) format("woff2");
+  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF; }
 @font-face { font-family: "MedievalSharp"; font-style: normal; font-weight: 400; font-display: swap;
   src: url(../fonts/medievalsharp-latin-400-normal.woff2) format("woff2"); }
 
@@ -42,8 +45,8 @@
   --gold: #F3C65F;
   --border: #22304A;
   --border-strong: #334155;
-  --serif: "Newsreader", "Noto Sans Bengali", Georgia, "Times New Roman", serif;
-  --sans: "Manrope", "Noto Sans Bengali", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --serif: "Newsreader", "Noto Sans Bengali", "Noto Sans Devanagari", Georgia, "Times New Roman", serif;
+  --sans: "Manrope", "Noto Sans Bengali", "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --nav-h: 68px;
@@ -79,9 +82,12 @@ h1, h2, h3, h4 { margin: 0; font-weight: 500; }
 .skip:focus { top: 12px; }
 
 /* ---------- languages ---------- */
-html[data-lang="en"] .lang-bn, html[data-lang="bn"] .lang-en { display: none !important; }
-.lang-bn { letter-spacing: 0 !important; text-transform: none !important; }
-html[data-lang="bn"] body { line-height: 1.75; }
+/* Bangla and Hindi use their own typeface for headings, a little more line height, and no tight tracking */
+html[data-lang="bn"] { --script: "Noto Sans Bengali"; }
+html[data-lang="hi"] { --script: "Noto Sans Devanagari"; }
+:is(html[data-lang="bn"], html[data-lang="hi"]) body { line-height: 1.75; }
+/* while a saved language is being applied on load, keep the English text out of sight */
+.i18n-pending main, .i18n-pending .footer, .i18n-pending .nav-links { visibility: hidden; }
 main, .footer { transition: opacity 0.22s ease; }
 .lang-switching main, .lang-switching .footer, .lang-switching .nav-links { opacity: 0; transition-duration: 0.14s; }
 
@@ -114,13 +120,20 @@ main, .footer { transition: opacity 0.22s ease; }
   opacity: 0; transition: transform 0.5s var(--ease), width 0.5s var(--ease), opacity 0.3s ease;
 }
 .nav-actions { display: flex; align-items: center; gap: 10px; }
-.lang-toggle {
-  font: 600 14px/1 var(--sans); color: var(--text); cursor: pointer;
-  background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-strong); border-radius: 999px; padding: 10px 16px;
+.lang-picker {
+  position: relative; display: inline-flex; align-items: center; color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: 999px; background: rgba(255, 255, 255, 0.03);
   transition: border-color 0.25s, background 0.25s;
 }
-.lang-toggle:hover { border-color: var(--accent); background: rgba(167, 139, 250, 0.1); }
-.lang-toggle [lang="bn"] { font-family: "Noto Sans Bengali", var(--sans); }
+.lang-picker:hover, .lang-picker:focus-within { border-color: var(--accent); background: rgba(167, 139, 250, 0.1); }
+.lang-picker svg { position: absolute; left: 12px; width: 16px; height: 16px; color: var(--hl); pointer-events: none; }
+.lang-picker select {
+  -webkit-appearance: none; appearance: none; cursor: pointer; border: 0; border-radius: 999px; color: var(--text);
+  font: 600 14px/1.2 var(--sans); padding: 10px 32px 10px 35px;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23C4B5FD' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 13px center / 10px 6px;
+}
+.lang-picker select:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+.lang-picker option { background: #0E1427; color: var(--text); }
 .menu-btn { position: relative; display: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border-strong); background: rgba(255, 255, 255, 0.03); color: var(--text); cursor: pointer; place-items: center; }
 .menu-icon { display: grid; gap: 5px; }
 .menu-icon i { display: block; width: 16px; height: 1.6px; border-radius: 2px; background: currentColor; transition: transform 0.35s var(--ease); }
@@ -157,10 +170,10 @@ main, .footer { transition: opacity 0.22s ease; }
 .hero-name { font: 500 clamp(58px, 8.2vw, 116px)/0.94 var(--serif); letter-spacing: -0.035em; margin-top: 18px; }
 .hero-name .line { display: block; overflow: hidden; padding: 0.02em 0.06em 0.1em 0; margin-bottom: -0.1em; }
 .hero-name .line > span { display: inline-block; }
-html[data-lang="bn"] .hero-name { font: 600 clamp(46px, 6.4vw, 88px)/1.18 "Noto Sans Bengali", var(--sans); letter-spacing: 0; }
+:is(html[data-lang="bn"], html[data-lang="hi"]) .hero-name { font: 600 clamp(46px, 6.4vw, 88px)/1.2 var(--script), var(--sans); letter-spacing: 0; }
 .hero-alt { margin-top: 14px; color: var(--hl); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.3; }
-.hero-alt .lang-en { font-family: "Noto Sans Bengali", var(--sans); font-weight: 500; }
-.hero-alt .lang-bn { font-family: var(--serif); font-style: italic; }
+#hero-alt:lang(bn) { font-family: "Noto Sans Bengali", var(--sans); font-weight: 500; }
+#hero-alt:lang(en) { font-family: var(--serif); font-style: italic; }
 .hero-role { margin-top: 30px; font-size: clamp(18px, 1.6vw, 20px); font-weight: 700; color: var(--text); }
 .hero-lede { margin-top: 10px; max-width: 56ch; color: var(--muted); font-size: 17px; line-height: 1.75; }
 .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 32px; }
@@ -212,12 +225,12 @@ html[data-lang="bn"] .hero-name { font: 600 clamp(46px, 6.4vw, 88px)/1.18 "Noto 
 /* ---------- sections ---------- */
 .section { padding-block: clamp(80px, 10vw, 128px); border-top: 1px solid rgba(34, 48, 74, 0.7); }
 .title { font: 500 clamp(36px, 5vw, 58px)/1.05 var(--serif); letter-spacing: -0.025em; max-width: 20ch; text-wrap: balance; margin-bottom: clamp(36px, 5vw, 56px); }
-html[data-lang="bn"] .title { font: 600 clamp(30px, 4vw, 46px)/1.3 "Noto Sans Bengali", var(--sans); letter-spacing: 0; }
+:is(html[data-lang="bn"], html[data-lang="hi"]) .title { font: 600 clamp(30px, 4vw, 46px)/1.3 var(--script), var(--sans); letter-spacing: 0; }
 .meta { margin-top: 8px; color: var(--hl); font-size: 15px; font-weight: 600; }
 .built { margin-top: 14px; color: var(--faint); font-size: 14px; }
 .links { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 20px; }
 .subhead { margin: clamp(64px, 8vw, 96px) 0 26px; font: italic 400 clamp(24px, 2.4vw, 30px)/1.2 var(--serif); color: var(--hl); }
-html[data-lang="bn"] .subhead { font: 600 22px/1.4 "Noto Sans Bengali", var(--sans); }
+:is(html[data-lang="bn"], html[data-lang="hi"]) .subhead { font: 600 22px/1.4 var(--script), var(--sans); }
 .subhead-plain { margin-top: 0; }
 
 /* scroll reveal: a short fade, nothing more */
@@ -248,7 +261,7 @@ html[data-lang="bn"] .subhead { font: 600 22px/1.4 "Noto Sans Bengali", var(--sa
 }
 .feature-flip .feature-visual { order: -1; }
 .feature-text h3 { font: 500 clamp(28px, 3vw, 38px)/1.12 var(--serif); letter-spacing: -0.02em; }
-html[data-lang="bn"] .feature-text h3 { font: 600 clamp(24px, 2.6vw, 32px)/1.4 "Noto Sans Bengali", var(--sans); letter-spacing: 0; }
+:is(html[data-lang="bn"], html[data-lang="hi"]) .feature-text h3 { font: 600 clamp(24px, 2.6vw, 32px)/1.4 var(--script), var(--sans); letter-spacing: 0; }
 .feature-text > p:not(.meta):not(.built):not(.links):not(.role) { margin-top: 18px; color: var(--muted); line-height: 1.75; }
 .findings { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
 .findings li { position: relative; padding-left: 22px; color: var(--text-2); line-height: 1.65; }
@@ -294,7 +307,7 @@ html[data-lang="bn"] .feature-text h3 { font: 600 clamp(24px, 2.6vw, 32px)/1.4 "
 .research { border-top: 1px solid var(--border); }
 .research-item { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(14px, 4vw, 56px); padding: 26px 0; border-bottom: 1px solid var(--border); }
 .research-item h4 { font: 500 21px/1.35 var(--serif); }
-html[data-lang="bn"] .research-item h4, html[data-lang="bn"] .web-card h4 { font-family: "Noto Sans Bengali", var(--sans); font-weight: 600; font-size: 19px; line-height: 1.5; }
+:is(html[data-lang="bn"], html[data-lang="hi"]) :is(.research-item h4, .web-card h4) { font-family: var(--script), var(--sans); font-weight: 600; font-size: 19px; line-height: 1.5; }
 .research-item p:not(.built) { color: var(--muted); font-size: 15.5px; line-height: 1.7; }
 .research-item .built { margin-top: 10px; }
 .more { margin-top: 30px; }
@@ -302,7 +315,7 @@ html[data-lang="bn"] .research-item h4, html[data-lang="bn"] .web-card h4 { font
 /* ---------- skills ---------- */
 .skills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px clamp(24px, 3vw, 44px); border-top: 1px solid var(--border); padding-top: 30px; }
 .skill-col h3 { font: 500 20px/1.3 var(--serif); margin-bottom: 12px; }
-html[data-lang="bn"] .skill-col h3, html[data-lang="bn"] .lead-item h3, html[data-lang="bn"] .tl-item h4 { font-family: "Noto Sans Bengali", var(--sans); font-weight: 600; font-size: 18px; line-height: 1.5; }
+:is(html[data-lang="bn"], html[data-lang="hi"]) :is(.skill-col h3, .lead-item h3, .tl-item h4) { font-family: var(--script), var(--sans); font-weight: 600; font-size: 18px; line-height: 1.5; }
 .skill-col ul { list-style: none; margin: 0; padding: 0; }
 .skill-col li { padding: 9px 0; border-bottom: 1px dashed rgba(51, 65, 85, 0.75); color: var(--muted); font-size: 15px; }
 .skill-col li:last-child { border-bottom: 0; }
@@ -354,7 +367,7 @@ html[data-lang="bn"] .skill-col h3, html[data-lang="bn"] .lead-item h3, html[dat
   background: radial-gradient(110% 90% at 50% 0%, rgba(167, 139, 250, 0.16), transparent 62%), rgba(255, 255, 255, 0.02);
 }
 .contact-title { margin: 0 auto; max-width: none; font-size: clamp(46px, 7vw, 90px); }
-html[data-lang="bn"] .contact-title { font-size: clamp(36px, 5.5vw, 64px); }
+:is(html[data-lang="bn"], html[data-lang="hi"]) .contact-title { font-size: clamp(36px, 5.5vw, 64px); }
 .contact-lede { max-width: 50ch; margin: 18px auto 0; color: var(--muted); font-size: 17px; }
 .contact-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; max-width: 760px; margin: 40px auto 0; text-align: left; }
 .contact-link {
@@ -416,7 +429,7 @@ html[data-lang="bn"] .contact-title { font-size: clamp(36px, 5.5vw, 64px); }
   background: linear-gradient(180deg, #FFF6D8 10%, #F3C65F 55%, #C8912E 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 0 14px rgba(243, 198, 95, 0.4)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6));
 }
-.title-text.lang-bn { font-family: "Noto Sans Bengali", var(--sans); font-weight: 600; line-height: 1.45; }
+:is(html[data-lang="bn"], html[data-lang="hi"]) .title-text { font-family: var(--script), var(--sans); font-weight: 600; line-height: 1.45; letter-spacing: 0; }
 .sparkle { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #FFF3C4; box-shadow: 0 0 8px 3px rgba(255, 231, 150, 0.85); opacity: 0; animation: twinkle 2.4s ease-in-out infinite; }
 @keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.3) translateY(0); } 50% { opacity: 1; transform: scale(1) translateY(6px); } }
 .storybook { position: relative; width: 260px; height: 180px; margin: 12px auto 4px; }
@@ -474,7 +487,7 @@ html[data-lang="bn"] .contact-title { font-size: clamp(36px, 5.5vw, 64px); }
 @media (max-width: 560px) {
   .container, .nav-inner { padding-inline: 16px; }
   .hero-name { font-size: clamp(50px, 15vw, 68px); }
-  html[data-lang="bn"] .hero-name { font-size: clamp(40px, 12vw, 54px); }
+  :is(html[data-lang="bn"], html[data-lang="hi"]) .hero-name { font-size: clamp(40px, 12vw, 54px); }
   .arch { height: 400px; }
   .facts, .skills { grid-template-columns: 1fr; }
   .term-body { font-size: 11px; padding: 14px; }
