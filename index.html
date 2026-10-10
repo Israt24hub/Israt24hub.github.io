@@ -128,17 +128,16 @@
       </div>
     </div>
 
-    <figure class="doorway">
-      <div class="arch" id="hero-arch">
+    <figure class="hero-portrait">
+      <div class="portrait-frame" id="portrait-frame">
         <svg class="arch-line" aria-hidden="true"><path /></svg>
+        <div class="portrait">
+          <picture>
+            <source type="image/webp" srcset="img/srity-360.webp 360w, img/srity-640.webp 640w" sizes="(max-width: 900px) 260px, 380px">
+            <img src="img/srity-640.jpg" width="640" height="750" alt="Portrait of Israt Zaman Srity" fetchpriority="high">
+          </picture>
+        </div>
       </div>
-      <figcaption class="arch-caption">
-        <span data-i18n="hero.7">Curiosity, code, books, language, data and learning, hung like wind chimes. Move through them.</span>
-        <button type="button" class="sound-btn" id="hero-sound" aria-pressed="false">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path class="wave" d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.5a8 8 0 0 1 0 11"/></g></svg>
-          <span class="sound-label" data-i18n="sound.off">Turn on sound</span>
-        </button>
-      </figcaption>
     </figure>
   </div>
 </section>
@@ -146,12 +145,18 @@
 <!-- ============================== ABOUT ============================== -->
 <section id="about" class="section">
   <div class="container about-grid">
-    <div class="portrait" data-reveal>
-      <picture>
-        <source type="image/webp" srcset="img/srity-360.webp 360w, img/srity-640.webp 640w" sizes="(max-width: 900px) 240px, 320px">
-        <img src="img/srity-640.jpg" width="640" height="750" alt="Portrait of Israt Zaman Srity" loading="lazy">
-      </picture>
-    </div>
+    <figure class="doorway" data-reveal>
+      <div class="arch" id="chime-arch">
+        <svg class="arch-line" aria-hidden="true"><path /></svg>
+      </div>
+      <figcaption class="arch-caption">
+        <span data-i18n="hero.7">Curiosity, code, books, language, data and learning, hung like wind chimes. Move through them.</span>
+        <button type="button" class="sound-btn" id="chime-sound" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path class="wave" d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.5a8 8 0 0 1 0 11"/></g></svg>
+          <span class="sound-label" data-i18n="sound.off">Turn on sound</span>
+        </button>
+      </figcaption>
+    </figure>
     <div class="about-main">
       <h2 class="title" data-reveal><span data-i18n="about.1">Where engineering meets research</span></h2>
       <div class="about-text" data-reveal>

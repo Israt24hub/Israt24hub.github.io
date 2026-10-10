@@ -1,6 +1,7 @@
 /* Israt Zaman Srity — portfolio
    Night-navy page, lavender accent, rose for small highlights, gold only for BookaholiChael.
-   The one bold element is the hero doorway: the Bangla alphabet hanging like wind chimes.
+   The hero is the portrait in an arch that draws itself; the bold element is the doorway in About,
+   where six words hang like wind chimes in the page's language.
    Other motion explains something: the terminal types its real output, timelines fill as you read.
    Everything still reads with JavaScript off and with "reduce motion" on. */
 
@@ -186,13 +187,23 @@ main, .footer { transition: opacity 0.22s ease; }
 .hero-social a:hover { color: var(--text); border-color: var(--accent); }
 .hero-social svg { width: 18px; height: 18px; }
 
-/* the doorway */
+/* the portrait, framed by an arch outline that draws itself on load */
+.hero-portrait { margin: 0; display: flex; justify-content: center; }
+.portrait-frame { position: relative; width: min(100%, 400px); padding: 14px; }
+.portrait-frame .arch-line { z-index: 0; }
+.portrait-frame .portrait { position: relative; z-index: 1; }
+.portrait-frame::before {
+  content: ""; position: absolute; z-index: -1; inset: 8% -12% 0; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(167, 139, 250, 0.2), transparent);
+}
+
+/* the doorway with the chime curtain (About section) */
 .doorway { position: relative; margin: 0; display: flex; flex-direction: column; align-items: center; }
 .doorway::before {
   content: ""; position: absolute; z-index: -1; top: 4%; left: 0; right: 0; height: 76%; pointer-events: none;
   background: radial-gradient(closest-side, rgba(167, 139, 250, 0.16), transparent);
 }
-.arch { position: relative; width: min(100%, 380px); height: min(70vh, 640px); min-height: 440px; }
+.arch { position: relative; width: 100%; height: 480px; }
 .arch canvas { z-index: 1; }
 .arch-line { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .arch-line path { fill: none; stroke: rgba(196, 181, 253, 0.6); stroke-width: 1.25; }
@@ -213,14 +224,16 @@ main, .footer { transition: opacity 0.22s ease; }
 .js .intro { opacity: 0; transform: translateY(16px); }
 .js .hero-name .line > span { transform: translateY(110%); }
 .js .arch-line path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.js .portrait-frame .portrait { clip-path: inset(100% 0 0 0); }
+.js .portrait-frame .portrait img { scale: 1.08; }
 .js .arch canvas { clip-path: inset(0 0 100% 0); }
-.js .arch-caption { opacity: 0; }
 .is-ready .hero-name .line > span { transform: none; transition: transform 1.2s var(--ease) 0.15s; }
 .is-ready .hero-name .line:nth-child(2) > span { transition-delay: 0.27s; }
 .is-ready .intro { opacity: 1; transform: none; transition: opacity 1s var(--ease), transform 1s var(--ease); transition-delay: calc(var(--d, 0) * 90ms + 200ms); }
-.is-ready .arch-line path { stroke-dashoffset: 0; transition: stroke-dashoffset 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.2s; }
+.is-ready .portrait-frame .arch-line path, .doorway.is-in .arch-line path { stroke-dashoffset: 0; transition: stroke-dashoffset 1.8s cubic-bezier(0.65, 0, 0.35, 1) 0.2s; }
+.is-ready .portrait-frame .portrait { clip-path: inset(0 0 0 0); transition: clip-path 1.5s var(--ease) 0.45s; }
+.is-ready .portrait-frame .portrait img { scale: 1; transition: scale 2s var(--ease) 0.45s; }
 .arch.is-unrolled canvas { clip-path: inset(0 0 0 0); transition: clip-path 1.7s var(--ease); }
-.is-ready .arch-caption { opacity: 1; transition: opacity 1s ease 2.2s; }
 
 /* ---------- sections ---------- */
 .section { padding-block: clamp(80px, 10vw, 128px); border-top: 1px solid rgba(34, 48, 74, 0.7); }
@@ -238,7 +251,7 @@ main, .footer { transition: opacity 0.22s ease; }
 .js [data-reveal].is-in { opacity: 1; transform: none; }
 
 /* ---------- about ---------- */
-.about-grid { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: clamp(36px, 7vw, 100px); align-items: start; }
+.about-grid { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: clamp(36px, 7vw, 100px); align-items: start; }
 .portrait {
   aspect-ratio: 4 / 5; overflow: hidden; border-radius: 9999px 9999px 18px 18px;
   background: radial-gradient(circle at 50% 30%, #F6F2FF 0%, #E8DDFB 58%, #D8C7F6 100%);
@@ -476,9 +489,11 @@ main, .footer { transition: opacity 0.22s ease; }
   .nav-indicator { display: none; }
   .hero { min-height: 0; padding: calc(var(--nav-h) + 36px) 0 72px; }
   .hero-grid { grid-template-columns: 1fr; gap: 48px; }
-  .arch { width: min(100%, 340px); height: 460px; min-height: 0; }
+  .hero-portrait { order: -1; }
+  .portrait-frame { width: min(66vw, 270px); padding: 10px; }
+  .doorway { width: min(100%, 360px); margin-inline: auto; }
+  .arch { height: 460px; }
   .about-grid { grid-template-columns: 1fr; }
-  .portrait { width: min(70vw, 260px); }
   .journey, .lead-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 680px) {
@@ -509,10 +524,12 @@ main, .footer { transition: opacity 0.22s ease; }
   .js .intro, .js [data-reveal], .js .arch-caption { opacity: 1 !important; transform: none !important; }
   .js .hero-name .line > span { transform: none !important; }
   .js .arch-line path { stroke-dashoffset: 0 !important; }
-  .js .arch canvas { clip-path: none !important; }
+  .js .arch canvas, .js .portrait-frame .portrait { clip-path: none !important; }
+  .js .portrait-frame .portrait img { scale: 1 !important; }
   .js .timeline { --progress: 1; }
   .js .tl-item::before { border-color: var(--accent); background: var(--accent); }
 }
 
 /* without JavaScript there is no curtain to show */
 html:not(.js) .doorway { display: none; }
+html:not(.js) .about-grid { grid-template-columns: 1fr; }

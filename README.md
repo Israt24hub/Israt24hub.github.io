@@ -6,7 +6,8 @@ My personal site: who I am, what I've built, and how to reach me. It's in six la
 
 ## What's on the page
 
-- **Hero:** my name in Latin and Bangla script (ইসরাত জামান স্মৃতি), and a doorway where six words (curiosity, code, books, language, data, learning) hang like wind chimes, in whichever language the page is showing. Move the cursor (or a finger) through them and the strands part; press *Turn on sound* to hear them.
+- **Hero:** my name in Latin and Bangla script (ইসরাত জামান স্মৃতি) and my photo in an arch that draws itself when the page opens.
+- **About:** a doorway where six words (curiosity, code, books, language, data, learning) hang like wind chimes, in whichever language the page is showing. Move the cursor (or a finger) through them and the strands part; press *Turn on sound* to hear them.
 - **Selected work:** the CSE445 Bank Marketing study, LeakGuard, Chime Gate and Study Hub, with links to the code and live sites.
 - **Experience, education, leadership, interests**, and the BookaholiChael book.
 

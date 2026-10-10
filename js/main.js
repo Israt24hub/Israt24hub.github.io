@@ -1,5 +1,5 @@
 /*
- * Portfolio behaviour: languages (English, Bangla, Hindi, German, Italian, Spanish), navigation, the hero doorway, scroll effects,
+ * Portfolio behaviour: languages (English, Bangla, Hindi, German, Italian, Spanish), navigation, the hero portrait, the chime doorway, scroll effects,
  * the LeakGuard terminal, the contact form and the BookaholiChael book.
  * Plain JavaScript, no libraries. Everything respects "reduce motion".
  */
@@ -167,7 +167,25 @@
     }
 
     /* ------------------------------------------------------------------ */
-    /* Hero: the Bangla alphabet hanging in a doorway                       */
+    /* Arch outlines: an open doorway shape (sides and a round top)         */
+    /* ------------------------------------------------------------------ */
+    function archRise(el) {
+        return ((el.clientWidth / 2) / Math.max(1, el.clientHeight)) * 100
+    }
+    function drawArchLine(box, path) {
+        var w = box.clientWidth, h = box.clientHeight, i = 0.75, r = w / 2
+        path.ownerSVGElement.setAttribute("viewBox", "0 0 " + w + " " + h)
+        path.setAttribute("d", "M" + i + " " + h + "V" + r + "A" + (r - i) + " " + (r - i) + " 0 0 1 " + (w - i) + " " + r + "V" + h)
+        path.setAttribute("pathLength", "1")
+    }
+    // hero portrait: the outline draws and the photo rises into it once the fonts are in (CSS does the motion)
+    var frame = $("#portrait-frame")
+    var framePath = $(".arch-line path", frame)
+    drawArchLine(frame, framePath)
+    new ResizeObserver(function () { drawArchLine(frame, framePath) }).observe(frame)
+
+    /* ------------------------------------------------------------------ */
+    /* About: six words hanging in a doorway, in the page's language        */
     /* ------------------------------------------------------------------ */
     // The words come from "chimes.words" in each language; the typeface follows the script.
     var CHIME_FONTS = {
@@ -184,35 +202,24 @@
     }
     // switching language re-hangs the curtain with the new words
     function setChimes(code) {
-        if (!heroCurtain) return
+        if (!curtain) return
         loadChimeFont(code).then(function () {
             if (code !== lang()) return
-            heroCurtain.set({ text: chimeWords(code), fontFamily: chimeFont(code) })
-            if (reduce) return
+            curtain.set({ text: chimeWords(code), fontFamily: chimeFont(code) })
+            if (reduce || !arch.classList.contains("is-unrolled")) return
             arch.classList.remove("is-unrolled")
             void arch.offsetWidth
             arch.classList.add("is-unrolled")
         })
     }
-    var arch = $("#hero-arch")
+    var doorway = $(".doorway")
+    var arch = $("#chime-arch")
     var archPath = $(".arch-line path", arch)
-    var heroCurtain = null
-    var userMoved = false
-    window.addEventListener("pointermove", function () { userMoved = true }, { once: true, passive: true })
+    var curtain = null
 
-    function archRise(el) {
-        return ((el.clientWidth / 2) / Math.max(1, el.clientHeight)) * 100
-    }
-    function drawArchLine() {
-        var w = arch.clientWidth, h = arch.clientHeight, i = 0.75, r = w / 2
-        var svg = archPath.ownerSVGElement
-        svg.setAttribute("viewBox", "0 0 " + w + " " + h)
-        archPath.setAttribute("d", "M" + i + " " + h + "V" + r + "A" + (r - i) + " " + (r - i) + " 0 0 1 " + (w - i) + " " + r + "V" + h)
-        archPath.setAttribute("pathLength", "1")
-    }
-    function startHeroCurtain() {
-        if (!window.ChimeCurtain || heroCurtain) return
-        heroCurtain = new ChimeCurtain(arch, {
+    function startCurtain() {
+        if (!window.ChimeCurtain || curtain) return
+        curtain = new ChimeCurtain(arch, {
             text: chimeWords(lang()),
             fontFamily: chimeFont(lang()),
             color: "rgba(196, 181, 253, 0.92)",
@@ -232,59 +239,74 @@
             soundType: "chime",
             volume: 0.6,
         })
-        heroCurtain.canvas.style.touchAction = "pan-y" // let phones scroll the page with an up/down swipe
+        curtain.canvas.style.touchAction = "pan-y" // let phones scroll the page with an up/down swipe
         new ResizeObserver(function () {
-            drawArchLine()
-            heroCurtain.set({ archHeight: archRise(arch) })
+            drawArchLine(arch, archPath)
+            curtain.set({ archHeight: archRise(arch) })
         }).observe(arch)
     }
-    // On load a hand brushes through once, so visitors see that the strands move.
+    // The first time the doorway comes into view, the strands unroll and a hand brushes
+    // through once, so visitors see that they move. A real pointer movement takes over.
     function introSweep() {
-        if (reduce || !heroCurtain) return
-        var ptr = heroCurtain.ptr
+        if (reduce || !curtain) return
+        var ptr = curtain.ptr
         var w = arch.clientWidth, h = arch.clientHeight
-        var t0 = performance.now(), dur = 1700
+        var t0 = performance.now(), dur = 1700, stopped = false
+        var stop = function () { stopped = true }
+        window.addEventListener("pointermove", stop, { once: true, passive: true })
         ptr.x = ptr.lastX = -60
         ptr.y = ptr.lastY = h * 0.6
-        ;(function frame(now) {
-            if (userMoved) return
+        ;(function step(now) {
+            if (stopped) return
             var p = Math.min(1, (now - t0) / dur)
             var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2
             ptr.active = true
             ptr.x = -60 + (w + 120) * e
             ptr.y = h * (0.62 - 0.1 * Math.sin(p * Math.PI))
-            if (p < 1) requestAnimationFrame(frame)
-            else ptr.active = false
+            if (p < 1) requestAnimationFrame(step)
+            else {
+                ptr.active = false
+                window.removeEventListener("pointermove", stop)
+            }
         })(t0)
     }
+    function whenDoorwayShows(fn) {
+        if (!("IntersectionObserver" in window)) return fn()
+        var io = new IntersectionObserver(function (entries) {
+            if (!entries[0].isIntersecting) return
+            io.disconnect()
+            fn()
+        }, { threshold: 0.4 })
+        io.observe(arch)
+    }
 
-    var heroSound = $("#hero-sound")
+    var chimeSound = $("#chime-sound")
     function labelSound(btn, on) {
         btn.setAttribute("aria-pressed", on ? "true" : "false")
         var label = $(".sound-label", btn)
         label.setAttribute("data-i18n", on ? "sound.on" : "sound.off")
         label.innerHTML = t(label.getAttribute("data-i18n"))
     }
-    heroSound.addEventListener("click", function () {
-        if (!heroCurtain) return
-        var on = !heroCurtain.o.sound
-        heroCurtain.set({ sound: on })
+    chimeSound.addEventListener("click", function () {
+        if (!curtain) return
+        var on = !curtain.o.sound
+        curtain.set({ sound: on })
         if (on) ChimeCurtain.unlockAudio()
-        labelSound(heroSound, on)
+        labelSound(chimeSound, on)
     })
 
-    drawArchLine()
-    var fontsReady = loadChimeFont(lang())
+    drawArchLine(arch, archPath)
     var pageFonts = document.fonts ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 800) })]) : Promise.resolve()
-
     pageFonts.then(function () {
         requestAnimationFrame(function () { doc.classList.add("is-ready") })
     })
-    fontsReady.then(function () {
-        startHeroCurtain()
+    loadChimeFont(lang()).then(function () {
+        startCurtain()
         if (reduce) return
-        setTimeout(function () { arch.classList.add("is-unrolled") }, 450)
-        setTimeout(introSweep, 1500)
+        whenDoorwayShows(function () {
+            setTimeout(function () { arch.classList.add("is-unrolled") }, 300)
+            setTimeout(introSweep, 1300)
+        })
     })
 
     /* ------------------------------------------------------------------ */
